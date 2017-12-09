@@ -14,10 +14,15 @@ checkButton(Question, Title) :-
 
 
 % Time of symptoms
-tim :-
-	checkButton('Does the patient have symptoms for 2 hours or more?\n(Press NO if the pacient have symthoms for less than 2 hours).','DIAGNOSIS').
-timeSymAux :-
-	tim -> xdelayedSym; xacuteOnsetSym.
+timeSym :-
+	write('Write the time(hours) that onset of symptoms after ingestion of cow’s milk protein'),
+	nl,
+	read(Input),
+	acuteOnset(Input).
+
+% Acute onset symptoms diagnostic
+acuteOnset(Time):- Time > 1, xdelayedSym; xacuteOnsetSym.
+
 % List of symptoms
 delayedSym :- 
 	checkButton('The pacient present one or more of these symptoms?\n\n. Severe colic\n. Reflux-GORD\n. Food refusal or aversion\n. Perianal redness\n. Constipation\n. Abdominal discomfort\n. Blood/mucus in stools (in an otherwise well infant)\n. Pruritus, erythema\n. Significant atopic eczema', 'DIAGNOSIS').
@@ -83,7 +88,7 @@ improvementCheck_2 :-
 % Main
 
 start :-
-	timeSymAux.
+	timeSym.
 
 xdelayedSym :-
 	not(delayedSym) -> write('So, the pacient is fine.'); xfalteringGrowth.
@@ -101,20 +106,25 @@ xacuteOnsetSym_2 :-
 :-	pce_image_directory('./').
 	resource(imagem, image, image('apvl.jpeg')).
 
-:-  	new(Interface, dialog('DIAGNOSIS')),
+:-  new(Interface, dialog('DIAGNOSIS')),
 	new(Menu, menu_bar),
 	send(Menu, append, new(Consultar, popup(menu))),
 
-	% OPCOES DO MENU
+	% Menu options
 
 	send_list(Consultar, append, [menu_item('Authors', message(@display, inform,
 	"Developed by:\n- Emerson Victor\n- Ewerton Felipe\n- José Claudino\n- José Tomáx\n\n(C) 2017.")), menu_item(sair, and(message(Interface, destroy), message(Interface, free)))]),
 
 	new(Imagem, label(nome, resource(imagem))),
 	new(Title, text('CMPA Diagnostic System')),
-	new(Button, button('  Start diagnosis  ', and(message(@prolog, diag)))),
+	new(Button, button('  Start diagnosis  ', and(message(@prolog, start)))),
+	
+	send(Interface, append, button(  postDiagnosis, message(@prolog, improvementButton))),
 
-	% FORMATANDO O Title DO PROGRAMA
+    send(Interface,default_button,  postDiagnosis),
+
+
+	% Formatting program title
 
 	send(Title, font, font(times, bold, 20)),
 	send_list(Interface, append, [Menu, Imagem, Title, Button]),

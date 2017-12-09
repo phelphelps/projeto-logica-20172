@@ -15,13 +15,25 @@ checkButton(Question, Title) :-
 
 % Time of symptoms
 timeSym :-
-	write('Write the time(hours) that onset of symptoms after ingestion of cow’s milk protein'),
-	nl,
-	read(Input),
-	acuteOnset(Input).
+	
+    new(D, dialog('Number of hours after ingestion')),
+    send(D, append, new(label)),
+    send(D, append, new(Hours, text_item(hours))),
+
+    send(Hours, type, int),
+
+    send(D, append,
+         button(create, message(@prolog, acuteOnset,
+                                Hours?selection
+                                ))),
+
+    send(D, default_button, create),
+    send(D, open).
+
 
 % Acute onset symptoms diagnostic
-acuteOnset(Time):- Time > 1, xdelayedSym; xacuteOnsetSym.
+acuteOnset(Hours):- Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
+	
 
 % List of symptoms
 delayedSym :- 

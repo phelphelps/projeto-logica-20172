@@ -15,7 +15,7 @@ caixaSimNao(Pergunta, Titulo) :-
 
 % Time of symptoms
 tim :-
-	caixaSimNao('Does the patient have symptoms for 2 hours or more?','DIAGNOSIS').
+	caixaSimNao('Does the patient have symptoms for 2 hours or more?\n(Press NO if the pacient syntoms have symthoms for less than 2 hours).','DIAGNOSIS').
 timeSymAux :-
 	tim -> xdelayedSym; xacuteOnsetSym.
 % List of symptoms
@@ -37,10 +37,7 @@ breastfedDelayed :-
 	caixaSimNao('Is the baby exclusively breastfed?', 'DIAGNOSIS').
 	
 breastfedDelayedCheck :- 
-	breastfedDelayed -> write('(exclude breastfeeding technique issues first)\n\nExclude cow’s milkcontaining foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\n
-	Challenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue 
-	maternal cow’s milk free diet till review by dietitian 
-	(if applicable).'); checkEhf.
+	breastfedDelayed -> write('(exclude breastfeeding technique issues first)\n\nExclude cow’s milkcontaining foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cow’s milk free diet till review by dietitian (if applicable).'); checkEhf.
 
 breastfedOnset :-
 	caixaSimNao('Is the baby breastfed?', 'DIAGNOSIS').
@@ -58,16 +55,14 @@ checkEhf :-
 ehfAge :-
 	caixaSimNao('Is the pacient over 6 life months?','DIAGNOSIS').
 ehfPresc:-
-	not(ehfAge) -> write('Althera(450g)\nAptamil Pepiti 1(400/800g)\n
-	Nutramigen LGG 1 (400g)\nSimilac Alimentum (400g)') ; write('Aptamil Pepti 2 (400g/800g)\nNutramigen LGG 2 (400g)').
+	not(ehfAge) -> write('Althera(450g)\nAptamil Pepiti 1(400/800g)\nNutramigen LGG 1 (400g)\nSimilac Alimentum (400g)') ; write('Aptamil Pepti 2 (400g/800g)\nNutramigen LGG 2 (400g)').
 
 % Prescription - AAF
 
 aafPresc :-
 	write('Alfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)').
 
-% Main
-diag :- true; send(@display, inform, 'O paciente diagnosticado nao possui anemia.').
+
 
 % Improvement checking 
 
@@ -85,13 +80,21 @@ improvementQuestion_2 :-
 improvementCheck_2 :-
 	not(improvementQuestion_2) -> (write('If infant on EHF and CMPA still suspected prescribe AAF.\nIt is the options:\n\n'),aafPresc); write('If improvement do not home challenge and continue with EHF.').
 
-start :- timeSymAux.
+% Main
 
-xdelayedSym :- not(delayedSym) -> write('So, the pacient is fine.'); xfalteringGrowth.
+start :-
+	timeSymAux.
 
-xfalteringGrowth :- not(falteringGrowth) -> breastfedDelayedCheck; checkEhf.
+xdelayedSym :-
+	not(delayedSym) -> write('So, the pacient is fine.'); xfalteringGrowth.
 
-xacuteOnsetSym :- acuteOnsetSym_1 -> breastfedOnsetCheck; acuteOnsetSym_2.
+xfalteringGrowth :-
+	not(falteringGrowth) -> breastfedDelayedCheck; breastfedDelayedCheck.
+
+xacuteOnsetSym :-
+	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
+xacuteOnsetSym_2 :-
+	acuteOnsetSym_2 -> (write('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\nIt is the options:\n\n'),aafPresc); write('So, the pacient is fine').
 
 % Graphic Interface
 

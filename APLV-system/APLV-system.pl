@@ -32,7 +32,9 @@ timeSym :-
 
 
 % Acute onset symptoms diagnostic
-acuteOnset(Hours):- Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
+acuteOnset(Hours):-
+	Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
+
 	
 
 % List of symptoms
@@ -54,13 +56,13 @@ breastfedDelayed :-
 	checkButton('Is the baby exclusively breastfed?', 'DIAGNOSIS').
 	
 breastfedDelayedCheck :- 
-	breastfedDelayed -> print('(exclude breastfeeding technique issues first)\n\nExclude cows milk containing foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cows milk free diet till review by \ndietitian (if applicable).', 'DIAGNOSIS'); checkEhf.
+	breastfedDelayed -> printSmall('(exclude breastfeeding technique issues first)\n\nExclude cows milk containing foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cows milk free diet till review by \ndietitian (if applicable).', 'DIAGNOSIS'); checkEhf.
 
 breastfedOnset :-
 	checkButton('Is the baby breastfed?', 'DIAGNOSIS').
 
 breastfedOnsetCheck :- 
-	not(breastfedOnset) -> print('Exclude cowss milk containing foods from maternal diet for 2-4 weeks.\nDo not home challenge after 2-4 weeks if an improvement.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\ncholecalciferol 10mcg\nchewable tablets - 2 daily', 'DIAGNOSIS'); checkEhf.
+	not(breastfedOnset) -> printSmall('Exclude cowss milk containing foods from maternal diet for 2-4 weeks.\nDo not home challenge after 2-4 weeks if an improvement.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\ncholecalciferol 10mcg\nchewable tablets - 2 daily', 'DIAGNOSIS'); checkEhf.
 
 
 % Prescription - EHF
@@ -70,7 +72,7 @@ checkEhf :-
 ehfAge :-
 	checkButton('Is the pacient over 6 life months?','DIAGNOSIS').
 ehfPresc:-
-	not(ehfAge) -> print('Althera(450g)\nAptamil Pepiti 1(400/800g)\nNutramigen LGG 1 (400g)\nSimilac Alimentum (400g),','PRESCRIPTION') ; print('Aptamil Pepti 2 (400g/800g)\nNutramigen LGG 2 (400g)','PRESCRIPTION').
+	not(ehfAge) -> printSmall('Althera(450g)\nAptamil Pepiti 1(400/800g)\nNutramigen LGG 1 (400g)\nSimilac Alimentum (400g),','PRESCRIPTION') ; printSmall('Aptamil Pepti 2 (400g/800g)\nNutramigen LGG 2 (400g)','PRESCRIPTION').
 
 % Prescription - AAF
 
@@ -109,7 +111,7 @@ xfalteringGrowth :-
 xacuteOnsetSym :-
 	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
 xacuteOnsetSym_2 :-
-	acuteOnsetSym_2 -> (printSmall('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\nIt is the options:\n\n','PRESCRIPTION'),aafPresc); print('So, the pacient is fine','DIAGNOSIS').
+	acuteOnsetSym_2 -> (printSmall('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\nIt is the options:\n\n','PRESCRIPTION'),aafPresc); printSmall('So, the pacient is fine','DIAGNOSIS').
 homeChallenge :- 
 	printBig('The Home Challenge\n\nHow you carry out the Challenge depends on whether you\nare giving any formula milk or are fully breast feeding.\nFormula Fed Child (those taking only formula feeds or taking\nformula as well as breast feeds).\n      • Each day increase, as set out in the example in the right-hand\ncolumn, the amount of cow’s milk formula in just the FIRST\nbottle of the day.\n      • If symptoms are obvious, STOP the Challenge. Give only the\nprescribed formula again and inform your dietitian or GP.\n      • If no symptoms occur after day 7, when you have replaced\nthe 1st bottle of the day completely with cow’s milk formula,\ngive your child cows mik formula in all bottles.\n      • If you were also breast feeding and on a milk free diet\nyourself, start eating products containing milk again, e.g milk,\ncheese and yoghurt.\n      • If no symptoms occur within 2 weeks of your child having\nmore than 200mls of cows milk formula per day, he/she\ndoes not have cow’s milk allergy.','HOME CHALLENGE').
 % Graphic Interface

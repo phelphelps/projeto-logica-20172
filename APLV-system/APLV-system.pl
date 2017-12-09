@@ -71,17 +71,19 @@ diag :- true; send(@display, inform, 'O paciente diagnosticado nao possui anemia
 
 % Improvement checking 
 
+improvementButton :-
+	falteringGrowth -> improvementCheck_2; improvementCheck_1.
 improvementQuestion_1 :-
 	caixaSimNao('Has there been improvement?','DIAGNOSIS').
 	
 improvementCheck_1 :-
-	not(improvementQuestion_1) -> write('If infant on EHF and CMPA still suspected prescribe AAF.\nIt is the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); write('Perform home challenge to confirm diagnosis, 2- 4 weeks after starting EHF. If symptoms return continue with EHF.').
+	not(improvementQuestion_1) -> (write('If infant on EHF and CMPA still suspected prescribe AAF.\nIt is the options:\n\n'),aafPresc); write('Perform home challenge to confirm diagnosis, 2- 4 weeks after starting EHF. If symptoms return continue with EHF.').
 
 improvementQuestion_2 :-
 	caixaSimNao('Has there been improvement?', 'DIAGNOSIS').
 	
 improvementCheck_2 :-
-	not(improvementQuestion_2) -> write('If infant on EHF and CMPA still suspected prescribe AAF.\nIt is the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); write('If improvement do not home challenge and continue with EHF.').
+	not(improvementQuestion_2) -> (write('If infant on EHF and CMPA still suspected prescribe AAF.\nIt is the options:\n\n'),aafPresc); write('If improvement do not home challenge and continue with EHF.').
 
 start :- timeSymAux.
 

@@ -23,10 +23,10 @@ timeSym :-
     send(Hours, type, int),
 
     send(Interface, append,
-         button(create, message(@prolog, acuteOnset,
+         button(continue, message(@prolog, acuteOnset,
                                 Hours?selection
                                 ))),
-    send(Interface, default_button, create),
+    send(Interface, default_button, continue),
     send(Interface, open).
 
 
@@ -110,7 +110,7 @@ xfalteringGrowth :-
 xacuteOnsetSym :-
 	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
 xacuteOnsetSym_2 :-
-	acuteOnsetSym_2 -> (print('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\nThese are the options:\n\n'),aafPresc); print('So, the pacient is fine').
+	acuteOnsetSym_2 -> print('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\n\nThese are the options:\n\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); print('So, the pacient is fine').
 homeChallenge :- 
 	print('The Home Challenge\n\nHow you carry out the Challenge depends on whether you\nare giving any formula milk or are fully breast feeding.\nFormula Fed Child (those taking only formula feeds or taking\nformula as well as breast feeds).\n      - Each day increase, as set out in the example in the right-hand\ncolumn, the amount of cows milk formula in just the FIRST\nbottle of the day.\n      - If symptoms are obvious, STOP the Challenge. Give only the\nprescribed formula again and inform your dietitian or GP.\n      - If no symptoms occur after day 7, when you have replaced\nthe 1st bottle of the day completely with cows milk formula,\ngive your child cows mik formula in all bottles.\n      - If you were also breast feeding and on a milk free diet\nyourself, start eating products containing milk again, e.g milk,\ncheese and yoghurt.\n      - If no symptoms occur within 2 weeks of your child having\nmore than 200mls of cows milk formula per day, he/she\ndoes not have cows milk allergy.').
 

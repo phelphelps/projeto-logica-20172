@@ -1,6 +1,7 @@
 
 true(yes).
-
+/*entrega uma janela com as perguntas que passamos como parametro (junto com o titulo da janela)
+o predicado retorna True ou false, representados por Yes ou No*/
 checkButton(Question, Title) :-
 	new(Interface, dialog(Title)),
 	new(Answer, menu(Question)),
@@ -14,6 +15,8 @@ checkButton(Question, Title) :-
 
 
 % Time of symptoms
+/*checa ha quanto tempo houve a ingestao de proteina de leite. 
+>1 hora chamamos o predicado auxiliar xdelayedSym, senao chamamos o predicado xacuteOnsetSym*/
 timeSym :-
 	
     new(Interface, dialog('Number of hours after ingestion')),
@@ -33,36 +36,29 @@ timeSym :-
 acuteOnset(Hours):-
 	Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
 
-	
-
 % List of symptoms
+/*lista de possiveis sintomas que guiam as proximas etapas do programa*/
 delayedSym :- 
 	checkButton('The pacient present one or more of these symptoms?\n\n. Severe colic\n. Reflux-GORD\n. Food refusal or aversion\n. Perianal redness\n. Constipation\n. Abdominal discomfort\n. Blood/mucus in stools (in an otherwise well infant)\n. Pruritus, erythema\n. Significant atopic eczema', 'DIAGNOSIS').
-
 acuteOnsetSym_1 :-
 	checkButton('The pacient present one or more of these symptoms?\n\n. Vomiting\n. Diarrhoea\n. Abdominal pain/colic\n. Acute pruritus, erythema, urticaria\n. Angioedema\n. Acute flare up of atopic eczema', 'DIAGNOSIS').
-
 acuteOnsetSym_2 :-
 	checkButton('The pacient present one or more these symptoms?\n\nRespiratory cough\nwheeze\nvoice change or breathing\ndifficulty\nCVS faint, floppy, pale, collapsed\nfrom low blood pressure\nOr recurrent GI symptoms', 'DIAGNOSIS').
-
 falteringGrowth :-
 	checkButton('The pacient present signs of faltering growth?', 'DIAGNOSIS').
-
 breastfedDelayed :-
-	checkButton('Is the baby exclusively breastfed?', 'DIAGNOSIS').
-	
+	checkButton('Is the baby exclusively breastfed?', 'DIAGNOSIS').	
 breastfedDelayedCheck :- 
 	breastfedDelayed -> print('(exclude breastfeeding technique issues first)\n\nExclude cows milk containing foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cows milk free diet till review by \ndietitian (if applicable).'); checkEhf.
-
 breastfedOnset :-
 	checkButton('Is the baby breastfed?', 'DIAGNOSIS').
-
 breastfedOnsetCheck :- 
 	not(breastfedOnset) -> print('Exclude cowss milk containing foods from maternal diet for 2-4 weeks.\nDo not home challenge after 2-4 weeks if an improvement.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\ncholecalciferol 10mcg\nchewable tablets - 2 daily'); checkEhf.
 
 
 % Prescription - EHF / AFF
-
+/*Prescrevemos a formula com o ehfPresc mas checamos antes a idade do paciente com o ehfAge
+prescrevemos aaf com o aafPresc*/
 checkEhf :-
 	checkButton('Has the child ever had anaphylaxis or severe symtoms?','DIAGNOSIS'), aafPresc ; ehfPresc.
 ehfAge :-
@@ -75,10 +71,8 @@ homeChallenge :-
 	print('The Home Challenge\n\nHow you carry out the Challenge depends on whether you\nare giving any formula milk or are fully breast feeding.\nFormula Fed Child (those taking only formula feeds or taking\nformula as well as breast feeds).\n      - Each day increase, as set out in the example in the right-hand\ncolumn, the amount of cows milk formula in just the FIRST\nbottle of the day.\n      - If symptoms are obvious, STOP the Challenge. Give only the\nprescribed formula again and inform your dietitian or GP.\n      - If no symptoms occur after day 7, when you have replaced\nthe 1st bottle of the day completely with cows milk formula,\ngive your child cows mik formula in all bottles.\n      - If you were also breast feeding and on a milk free diet\nyourself, start eating products containing milk again, e.g milk,\ncheese and yoghurt.\n      - If no symptoms occur within 2 weeks of your child having\nmore than 200mls of cows milk formula per day, he/she\ndoes not have cows milk allergy.').
 
 
-
-
 % Improvement checking 
-
+/*Aqui checamos se há melhorias apos o tratamento com o improvementCheck_1 e improvementCheck_2*/
 improvementButton :-
 	falteringGrowth -> improvementCheck_2; improvementCheck_1.
 improvementQuestion_1 :-
@@ -91,23 +85,21 @@ improvementCheck_2 :-
 	not(improvementQuestion_2) -> (print('If infant on EHF and CMPA still suspected prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); print('Do not home challenge and continue with EHF.').
 
 % Main
-
+/*Aqui o programa inicia com a chamada do predicado start, e a depender das resposta chama os predicados auxiliares, que comecam com 'x'
+esses por sua vez, chamam outros predicados definidos anteriormente*/
 start :-
 	timeSym.
-
 xdelayedSym :-
 	not(delayedSym) -> print('So, the pacient is fine.'); xfalteringGrowth.
-
 xfalteringGrowth :-
 	not(falteringGrowth) -> breastfedDelayedCheck; breastfedDelayedCheck.
-
 xacuteOnsetSym :-
 	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
 xacuteOnsetSym_2 :-
 	acuteOnsetSym_2 -> print('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\n\nThese are the options:\n\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); print('So, the pacient is fine').
 
 % Graphic Interface
-
+/*Nessas 3 ultimas repartições é tratada a  parte grafica (janelas, etc)*/
 print(Text) :-
 	send(@display, inform, Text).
 		

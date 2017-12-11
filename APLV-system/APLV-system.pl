@@ -30,7 +30,6 @@ timeSym :-
     send(Interface, open).
 
 
-% Acute onset symptoms diagnostic
 acuteOnset(Hours):-
 	Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
 
@@ -49,8 +48,6 @@ acuteOnsetSym_2 :-
 falteringGrowth :-
 	checkButton('The pacient present signs of faltering growth?', 'DIAGNOSIS').
 
-/*O tratamento e diferente dependendo do tempo que o paciente manifestou os sintomas, por isso dois 'breastfeds'*/
-
 breastfedDelayed :-
 	checkButton('Is the baby exclusively breastfed?', 'DIAGNOSIS').
 	
@@ -64,7 +61,7 @@ breastfedOnsetCheck :-
 	not(breastfedOnset) -> print('Exclude cowss milk containing foods from maternal diet for 2-4 weeks.\nDo not home challenge after 2-4 weeks if an improvement.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\ncholecalciferol 10mcg\nchewable tablets - 2 daily'); checkEhf.
 
 
-% Prescription - EHF
+% Prescription - EHF / AFF
 
 checkEhf :-
 	checkButton('Has the child ever had anaphylaxis or severe symtoms?','DIAGNOSIS'), aafPresc ; ehfPresc.
@@ -72,11 +69,11 @@ ehfAge :-
 	checkButton('Is the pacient over 6 life months?','DIAGNOSIS').
 ehfPresc:-
 	not(ehfAge) -> print('Althera(450g)\nAptamil Pepiti 1(400/800g)\nNutramigen LGG 1 (400g)\nSimilac Alimentum (400g),') ; print('Aptamil Pepti 2 (400g/800g)\nNutramigen LGG 2 (400g)').
-
-% Prescription - AAF
-
 aafPresc :-
 	print('Prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)').
+homeChallenge :- 
+	print('The Home Challenge\n\nHow you carry out the Challenge depends on whether you\nare giving any formula milk or are fully breast feeding.\nFormula Fed Child (those taking only formula feeds or taking\nformula as well as breast feeds).\n      - Each day increase, as set out in the example in the right-hand\ncolumn, the amount of cows milk formula in just the FIRST\nbottle of the day.\n      - If symptoms are obvious, STOP the Challenge. Give only the\nprescribed formula again and inform your dietitian or GP.\n      - If no symptoms occur after day 7, when you have replaced\nthe 1st bottle of the day completely with cows milk formula,\ngive your child cows mik formula in all bottles.\n      - If you were also breast feeding and on a milk free diet\nyourself, start eating products containing milk again, e.g milk,\ncheese and yoghurt.\n      - If no symptoms occur within 2 weeks of your child having\nmore than 200mls of cows milk formula per day, he/she\ndoes not have cows milk allergy.').
+
 
 
 
@@ -86,13 +83,10 @@ improvementButton :-
 	falteringGrowth -> improvementCheck_2; improvementCheck_1.
 improvementQuestion_1 :-
 	checkButton('Has there been improvement?','DIAGNOSIS').
-	
 improvementCheck_1 :-
 	not(improvementQuestion_1) -> (print('If infant on EHF and CMPA still suspected prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); homeChallenge.
-
 improvementQuestion_2 :-
 	checkButton('Has there been improvement?', 'DIAGNOSIS').
-	
 improvementCheck_2 :-
 	not(improvementQuestion_2) -> (print('If infant on EHF and CMPA still suspected prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); print('Do not home challenge and continue with EHF.').
 
@@ -111,8 +105,6 @@ xacuteOnsetSym :-
 	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
 xacuteOnsetSym_2 :-
 	acuteOnsetSym_2 -> print('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\n\nThese are the options:\n\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); print('So, the pacient is fine').
-homeChallenge :- 
-	print('The Home Challenge\n\nHow you carry out the Challenge depends on whether you\nare giving any formula milk or are fully breast feeding.\nFormula Fed Child (those taking only formula feeds or taking\nformula as well as breast feeds).\n      - Each day increase, as set out in the example in the right-hand\ncolumn, the amount of cows milk formula in just the FIRST\nbottle of the day.\n      - If symptoms are obvious, STOP the Challenge. Give only the\nprescribed formula again and inform your dietitian or GP.\n      - If no symptoms occur after day 7, when you have replaced\nthe 1st bottle of the day completely with cows milk formula,\ngive your child cows mik formula in all bottles.\n      - If you were also breast feeding and on a milk free diet\nyourself, start eating products containing milk again, e.g milk,\ncheese and yoghurt.\n      - If no symptoms occur within 2 weeks of your child having\nmore than 200mls of cows milk formula per day, he/she\ndoes not have cows milk allergy.').
 
 % Graphic Interface
 

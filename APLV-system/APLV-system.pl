@@ -1,7 +1,7 @@
 
 true(yes).
 /*entrega uma janela com as perguntas que passamos como parametro (junto com o titulo da janela)
-o predicado retorna True ou false, representados por Yes ou No*/
+o predicado retorna True ou false, */
 checkButton(Question, Title) :-
 	new(Interface, dialog(Title)),
 	new(Answer, menu(Question)),
@@ -43,13 +43,12 @@ delayedSym :-
 acuteOnsetSym_1 :-
 	checkButton('The pacient present one or more of these symptoms?\n\n. Vomiting\n. Diarrhoea\n. Abdominal pain/colic\n. Acute pruritus, erythema, urticaria\n. Angioedema\n. Acute flare up of atopic eczema', 'DIAGNOSIS').
 acuteOnsetSym_2 :-
-	checkButton('The pacient present one or more these symptoms?\n\nRespiratory cough\nwheeze\nvoice change or breathing\ndifficulty\nCVS faint, floppy, pale, collapsed\nfrom low blood pressure\nOr recurrent GI symptoms', 'DIAGNOSIS').
+	checkButton('The pacient present one or more these symptoms?\n\nRespiratory cough\nWheeze\nVoice change or breathing difficulty\nCVS faint\nFloppy\nPale\nCollapsed from low blood pressure\nRecurrent GI symptoms', 'DIAGNOSIS').
 falteringGrowth :-
 	checkButton('The pacient present signs of faltering growth?', 'DIAGNOSIS').
-breastfedDelayed :-
-	checkButton('Is the baby exclusively breastfed?', 'DIAGNOSIS').	
-breastfedDelayedCheck :- 
-	breastfedDelayed -> print('(exclude breastfeeding technique issues first)\n\nExclude cows milk containing foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cows milk free diet till review by \ndietitian (if applicable).'); checkEhf.
+
+breastfedDelayed :- 
+	print('(exclude breastfeeding technique issues first)\n\nExclude cows milk containing foods frommaternal diet for 2-4weeks.\nPrescribe for mother:\n\nCalcium carbonate 1.25g\nCholecalciferol 10mcg\nChewable tablets - 2 daily\n\nChallenge with normal maternal diet after 2-4 weeks to confirm diagnosis.\nIf symptoms return continue  maternal cows milk free diet till review by \ndietitian (if applicable).'), checkEhf.
 breastfedOnset :-
 	checkButton('Is the baby breastfed?', 'DIAGNOSIS').
 breastfedOnsetCheck :- 
@@ -82,7 +81,7 @@ improvementCheck_1 :-
 improvementQuestion_2 :-
 	checkButton('Has there been improvement?', 'DIAGNOSIS').
 improvementCheck_2 :-
-	not(improvementQuestion_2) -> (print('If infant on EHF and CMPA still suspected prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); print('Do not home challenge and continue with EHF.').
+	not(improvementQuestion_2) -> (print('Continue maternal cows milk free diet till review by dietitian (if applicable) and prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); print('Do not home challenge and continue with EHF.').
 
 % Main
 /*Aqui o programa inicia com a chamada do predicado start, e a depender das resposta chama os predicados auxiliares, que comecam com 'x'
@@ -92,7 +91,7 @@ start :-
 xdelayedSym :-
 	not(delayedSym) -> print('So, the pacient is fine.'); xfalteringGrowth.
 xfalteringGrowth :-
-	not(falteringGrowth) -> breastfedDelayedCheck; breastfedDelayedCheck.
+	not(falteringGrowth) -> breastfedDelayed; breastfedDelayed.
 xacuteOnsetSym :-
 	acuteOnsetSym_1 -> breastfedOnsetCheck; xacuteOnsetSym_2.
 xacuteOnsetSym_2 :-

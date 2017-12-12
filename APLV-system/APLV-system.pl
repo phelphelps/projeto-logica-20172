@@ -1,6 +1,7 @@
 
 true(yes).
-
+/*entrega uma janela com as perguntas que passamos como parametro (junto com o titulo da janela)
+o predicado retorna True ou false, */
 checkButton(Question, Title) :-
 	new(Interface, dialog(Title)),
 	new(Answer, menu(Question)),
@@ -14,7 +15,8 @@ checkButton(Question, Title) :-
 
 
 % Time of symptoms
-
+/*checa ha quanto tempo houve a ingestao de proteina de leite. 
+>1 hora chamamos o predicado auxiliar xdelayedSym, senao chamamos o predicado xacuteOnsetSym*/
 timeSym :-
 	
     new(Interface, dialog('Number of hours after ingestion')),
@@ -32,8 +34,10 @@ timeSym :-
 
 
 acuteOnset(Hours):-
-	Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].z
+	Hours > 1, xdelayedSym; xacuteOnsetSym, [Hours].
+
 % List of symptoms
+/*lista de possiveis sintomas que guiam as proximas etapas do programa*/
 delayedSym :- 
 	checkButton('The pacient present one or more of these symptoms?\n\n. Severe colic\n. Reflux-GORD\n. Food refusal or aversion\n. Perianal redness\n. Constipation\n. Abdominal discomfort\n. Blood/mucus in stools (in an otherwise well infant)\n. Pruritus, erythema\n. Significant atopic eczema', 'DIAGNOSIS').
 acuteOnsetSym_1 :-
@@ -80,7 +84,8 @@ improvementCheck_2 :-
 	not(improvementQuestion_2) -> (print('Continue maternal cows milk free diet till review by dietitian (if applicable) and prescribe AAF.\nThese are the options:\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)')); print('Do not home challenge and continue with EHF.').
 
 % Main
-
+/*Aqui o programa inicia com a chamada do predicado start, e a depender das resposta chama os predicados auxiliares, que comecam com 'x'
+esses por sua vez, chamam outros predicados definidos anteriormente*/
 start :-
 	timeSym.
 xdelayedSym :-
@@ -93,23 +98,30 @@ xacuteOnsetSym_2 :-
 	acuteOnsetSym_2 -> print('Urgently treat symptoms.Immediately refer to specialist.\nPrescribe AAF.\n\nThese are the options:\n\n\nAlfamino (400g)\nNeocate LCP(400g)\nNutramigen Puramino (400g)'); print('So, the pacient is fine').
 
 % Graphic Interface
-
+/*Nessas 3 ultimas repartições é tratada a  parte grafica (janelas, etc)*/
 print(Text) :-
 	send(@display, inform, Text).
+		
 :-	pce_image_directory('./').
 	resource(imagem, image, image('apvl.jpeg')).
+
 :-  new(Interface, dialog('DIAGNOSIS')),
 	new(Menu, menu_bar),
 	send(Menu, append, new(Consultar, popup(menu))),
+	
+
 % Menu options
 
 	send_list(Consultar, append, [menu_item('Authors', message(@display, inform,
 	"Developed by:\n- Emerson Victor\n- Ewerton Felipe\n- José Claudino\n- José Tomáx\n\n(C) 2017.")), menu_item(sair, and(message(Interface, destroy), message(Interface, free)))]),
+
 	new(Imagem, label(nome, resource(imagem))),
 	new(Title, text('CMPA Diagnostic System')),
 	new(Button, button('  Start diagnosis  ', and(message(@prolog, start)))),
+	
 	new(Butoton, button('   Post-diagnosis   ', and(message(@prolog, improvementButton)))),
-    
+
+
 % Formatting program title
 
 	send(Title, font, font(times, bold, 20)),
